@@ -250,6 +250,10 @@ A `struct` containing the following fields:
     the compiler. If no interface file was produced (because the
     toolchain does not support them or it was not requested), this field
     will be None.
+*   `swiftsourceinfo`: The `.swiftsourceinfo` file that was produced by
+    the compiler. If no sourceinfo file was produced (because the
+    toolchain does not support them or it was not requested), this field
+    will be None.
 *   `swiftmodule`: The `.swiftmodule` file that was produced by the
     compiler.
 
@@ -395,7 +399,8 @@ module with no generated Objective-C interface.</p></td>
       <td><code>swift</code></td>
       <td><p><code>Optional; default is None</code></p><p>A value returned by <code>swift_common.create_swift_module</code> that
 contains artifacts related to Swift modules, such as the
-<code>.swiftmodule</code>, <code>.swiftdoc</code>, and/or <code>.swiftinterface</code> files emitted
+<code>.swiftmodule</code>, <code>.swiftdoc</code>, <code>.swiftinterface</code>, and/or
+<code>.swiftsourceinfo</code> files emitted
 by the compiler. This may be <code>None</code> if the module is a pure
 C/Objective-C module.</p></td>
     </tr>
@@ -471,7 +476,7 @@ A new `SwiftInfo` provider with the given values.
 ## swift_common.create_swift_module
 
 <pre style="white-space: normal">
-swift_common.create_swift_module(*, <a href="#swift_common.create_swift_module.swiftdoc">swiftdoc</a>, <a href="#swift_common.create_swift_module.swiftmodule">swiftmodule</a>, <a href="#swift_common.create_swift_module.defines">defines</a>=[], <a href="#swift_common.create_swift_module.swiftinterface">swiftinterface</a>=None)
+swift_common.create_swift_module(*, <a href="#swift_common.create_swift_module.swiftdoc">swiftdoc</a>, <a href="#swift_common.create_swift_module.swiftmodule">swiftmodule</a>, <a href="#swift_common.create_swift_module.defines">defines</a>=[], <a href="#swift_common.create_swift_module.swiftinterface">swiftinterface</a>=None, <a href="#swift_common.create_swift_module.swiftsourceinfo">swiftsourceinfo</a>=None)
 </pre>
 
 Creates a value representing a Swift module use as a Swift dependency.
@@ -504,14 +509,20 @@ that depend on this module. If omitted, the empty list will be used.</p></td>
       <td><p><code>Optional; default is None</code></p><p>The <code>.swiftinterface</code> file emitted by the compiler for
 this module. May be <code>None</code> if no module interface file was emitted.</p></td>
     </tr>
+    <tr id="swift_common.create_swift_module.swiftsourceinfo">
+      <td><code>swiftsourceinfo</code></td>
+      <td><p><code>Optional; default is None</code></p><p>The <code>.swiftsourceinfo</code> file emitted by the compiler for
+this module. May be <code>None</code> if no module sourceinfo file was emitted.</p></td>
+    </tr>
+
   </tbody>
 </table>
 
 <a name="swift_common.create_swift_module.returns"></a>
 ### Returns
 
-A `struct` containing the `defines`, `swiftdoc`, `swiftmodule`, and
-`swiftinterface` fields provided as arguments.
+A `struct` containing the `defines`, `swiftdoc`, `swiftmodule`,
+`swiftinterface`, and `swiftsourceinfo` fields provided as arguments.
 
 <a name="swift_common.derive_module_name"></a>
 ## swift_common.derive_module_name

@@ -530,6 +530,7 @@ def _swift_protoc_gen_aspect_impl(target, aspect_ctx):
                             swiftdoc = compilation_outputs.swiftdoc,
                             swiftmodule = compilation_outputs.swiftmodule,
                             swiftinterface = compilation_outputs.swiftinterface,
+                            swiftsourceinfo = compilation_outputs.swiftsourceinfo,
                         ),
                     ),
                 ],

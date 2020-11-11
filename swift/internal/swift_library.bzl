@@ -200,6 +200,7 @@ def _swift_library_impl(ctx):
         compilation_outputs.generated_header,
         compilation_outputs.swiftdoc,
         compilation_outputs.swiftinterface,
+        compilation_outputs.swiftsourceinfo,
         compilation_outputs.swiftmodule,
         library_to_link.pic_static_library,
     ])
@@ -239,6 +240,7 @@ def _swift_library_impl(ctx):
                         defines = ctx.attr.defines,
                         swiftdoc = compilation_outputs.swiftdoc,
                         swiftinterface = compilation_outputs.swiftinterface,
+                        swiftsourceinfo = compilation_outputs.swiftsourceinfo,
                         swiftmodule = compilation_outputs.swiftmodule,
                     ),
                 ),
