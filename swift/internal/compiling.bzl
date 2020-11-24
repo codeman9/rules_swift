@@ -2196,7 +2196,7 @@ def output_groups_from_compilation_outputs(compilation_outputs):
 
     if compilation_outputs.swiftsourceinfo:
         output_groups["swiftsourceinfo"] = depset([
-            compilation_outputs.swiftmodule,
+            compilation_outputs.swiftsourceinfo,
         ])
 
     return output_groups
