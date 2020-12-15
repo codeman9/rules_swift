@@ -65,9 +65,19 @@ void WorkProcessor::ProcessWorkRequest(
   // --- END
   bool is_wmo = false;
 
+  // --- HERE
+  std::ofstream request_args_stream;
+  request_args_stream.open("/tmp/request-args.txt", std::ios::app);
+  // --- END
+
   std::string prev_arg;
   for (auto arg : request.arguments()) {
     auto original_arg = arg;
+
+    // --- HERE
+    request_args_stream << arg << '\n';
+    // --- END
+
     // Peel off the `-output-file-map` argument, so we can rewrite it if
     // necessary later.
     if (arg == "-output-file-map") {
@@ -94,6 +104,11 @@ void WorkProcessor::ProcessWorkRequest(
 
     prev_arg = original_arg;
   }
+
+  // --- HERE
+  request_args_stream << '\n' << "--- NEXT ---" << '\n';
+  request_args_stream.close();
+  // --- END
 
   if (!output_file_map_path.empty()) {
     if (!is_wmo) {
@@ -135,6 +150,20 @@ void WorkProcessor::ProcessWorkRequest(
   }
 
   processed_args.push_back("@" + params_file->GetPath());
+
+  // --- HERE
+  std::ifstream src;
+  std::ofstream dst;
+
+  src.open(params_file->GetPath(), std::ios::in | std::ios::binary);
+  dst.open("/tmp/all-params.txt", std::ios::out | std::ios::binary | std::ios::app);
+  dst << src.rdbuf();
+  dst << "\n\n -- NEXT -- \n\n";
+
+  src.close();
+  dst.close();
+  // --- END
+
   params_file_stream.close();
 
   if (!is_wmo) {
@@ -150,6 +179,15 @@ void WorkProcessor::ProcessWorkRequest(
       }
     }
   }
+
+  // --- HERE
+  std::ofstream myargs;
+  myargs.open("/tmp/my-args.txt", std::ios::app);
+  for(unsigned int i=0; i<processed_args.size(); i++) {  
+      myargs << processed_args[i] << std::endl;
+  }
+  myargs.close();
+  // --- END
 
   std::ostringstream stderr_stream;
   SwiftRunner swift_runner(processed_args, /*force_response_file=*/true);
@@ -168,6 +206,13 @@ void WorkProcessor::ProcessWorkRequest(
       }
     }
   }
+
+  // --- HERE
+  std::ofstream myfile;
+  myfile.open ("/tmp/example.txt", std::ios::app);
+  myfile << stderr_stream.str();
+  myfile.close();
+  // --- END
 
   response->set_exit_code(exit_code);
   response->set_output(stderr_stream.str());
