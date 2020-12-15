@@ -60,6 +60,9 @@ void WorkProcessor::ProcessWorkRequest(
 
   OutputFileMap output_file_map;
   std::string output_file_map_path;
+  // --- HERE
+  std::string emit_module_path;
+  // --- END
   bool is_wmo = false;
 
   std::string prev_arg;
@@ -75,6 +78,15 @@ void WorkProcessor::ProcessWorkRequest(
     } else if (ArgumentEnablesWMO(arg)) {
       is_wmo = true;
     }
+
+    // --- HERE
+    if (arg == "-emit-module-path") {
+      arg.clear();
+    } else if (prev_arg == "-emit-module-path") {
+      emit_module_path = arg;
+      arg.clear();
+    }
+    // --- END
 
     if (!arg.empty()) {
       params_file_stream << arg << '\n';
@@ -100,11 +112,25 @@ void WorkProcessor::ProcessWorkRequest(
       // incremental mode anyway, but since we control the passing of this flag,
       // there's no reason to pass it when it's a no-op.
       params_file_stream << "-incremental\n";
+
+      // --- HERE
+      auto json = output_file_map.json();
+      auto incremental_swiftmodule_path = json[""]["swiftmodule"];
+      if (!incremental_swiftmodule_path.empty()) {
+        params_file_stream << "-emit-module-path" << '\n' << incremental_swiftmodule_path << '\n';
+      } else {
+        params_file_stream << "-emit-module-path" << '\n' << emit_module_path << '\n';
+      }
+      // --- END
     } else {
       // If WMO is forcing us out of incremental mode, just put the original
       // output file map back so the outputs end up where they should.
       params_file_stream << "-output-file-map\n";
       params_file_stream << output_file_map_path << '\n';
+      // --- HERE
+      params_file_stream << "-emit-module-path" << '\n';
+      params_file_stream << emit_module_path << '\n';
+      // --- END
     }
   }
 

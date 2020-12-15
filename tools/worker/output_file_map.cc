@@ -64,8 +64,27 @@ void OutputFileMap::UpdateForIncremental(const std::string &path) {
   // Derive the swiftdeps file name from the .output-file-map.json name.
   auto new_path = ReplaceExtension(path, ".swiftdeps", /*all_extensions=*/true);
   auto swiftdeps_path = MakeIncrementalOutputPath(new_path);
+  
+  // --- HERE
+  auto replaced_swiftmodule_path = ReplaceExtension(path, ".swiftmodule", /*all_extensions=*/true);
+  auto swiftmodule_path = MakeIncrementalOutputPath(replaced_swiftmodule_path);
+  auto replaced_swiftdoc_path = ReplaceExtension(path, ".swiftdoc", /*all_extensions=*/true);
+  auto swiftdoc_path = MakeIncrementalOutputPath(replaced_swiftdoc_path);
+  // --- END
+
   module_map["swift-dependencies"] = swiftdeps_path;
+
+  // --- HERE
+  module_map["swiftmodule"] = swiftmodule_path;
+  module_map["swiftdoc"] = swiftdoc_path;
+  // --- END
+
   new_output_file_map[""] = module_map;
+
+  // --- HERE
+  incremental_outputs[replaced_swiftmodule_path] = swiftmodule_path;
+  incremental_outputs[replaced_swiftdoc_path] = swiftdoc_path;
+  // --- END
 
   for (auto &element : json_.items()) {
     auto src = element.key();
